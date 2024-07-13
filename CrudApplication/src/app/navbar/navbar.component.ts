@@ -1,0 +1,25 @@
+import { Component } from '@angular/core';
+import { UserinputComponent } from '../userinput/userinput.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
+
+@Component({
+  selector: 'app-navbar',
+  standalone: true,
+  imports: [],
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.css'
+})
+export class NavbarComponent {
+  
+  constructor (private _dialog: MatDialog){}
+
+  userinputform(){
+    
+    this._dialog.open(UserinputComponent);
+  }
+
+}
