@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { UserinputComponent } from '../userinput/userinput.component';
 import { MatDialog } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+
+
 
 
 @Component({

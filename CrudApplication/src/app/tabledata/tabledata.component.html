@@ -1,0 +1,14 @@
+<div class="bg-[#7927ff] w-2/3 mx-auto mt-16">
+  <div class="flex border-b flex-row">
+    <div class="flex-1 p-4 font-bold text-white">Name</div>
+    <div class="flex-1 p-4 font-bold text-white">Workout</div>
+    <div class="flex-1 p-4 font-bold text-white">Number Of Workouts</div>
+    <div class="flex-1 p-4 font-bold text-white">Total Workout Minutes</div>
+  </div>
+  <div *ngFor="let user of userData" class="flex border-b flex-row">
+    <div class="flex-1 p-4 text-white">{{ user.name }}</div>
+    <div class="flex-1 p-4 text-white">{{ user.workouts.type || 'N/A' }}</div>
+  <div class="flex-1 p-4 text-white">{{ user.workouts.length }}</div>
+  <div class="flex-1 p-4 font-bold text-white">{{ user.workouts.minutes || 0 }} Min</div>
+  </div>
+</div>
