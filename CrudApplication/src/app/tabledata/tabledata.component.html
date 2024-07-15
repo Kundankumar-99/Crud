@@ -1,14 +1,83 @@
 <div class="bg-[#7927ff] w-2/3 mx-auto mt-16">
-  <div class="flex border-b flex-row">
-    <div class="flex-1 p-4 font-bold text-white">Name</div>
-    <div class="flex-1 p-4 font-bold text-white">Workout</div>
-    <div class="flex-1 p-4 font-bold text-white">Number Of Workouts</div>
-    <div class="flex-1 p-4 font-bold text-white">Total Workout Minutes</div>
+  <div class="flex flex-row">
+    <form class="flex flex-col bg-white border rounded-lg p-2 w-1/2 m-4">
+      <label
+        for="search-name"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      >
+        Search By Name
+      </label>
+      <div class="relative w-full">
+        <input
+          type="text"
+          id="search-name"
+          name="searchName"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Search by Name."
+          [(ngModel)]="searchText"
+        />
+      </div>
+    </form>
+
+    <form class="bg-white p-2 border rounded-lg w-1/2 m-4">
+      <label
+        for="workoutType"
+        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      >
+        Filter By Workout Type
+      </label>
+      <select
+        id="workoutType"
+        [(ngModel)]="selectedWorkoutType"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      >
+        <option value="All">All</option>
+        <option value="Running">Running</option>
+        <option value="Swimming">Swimming</option>
+        <option value="Yoga">Yoga</option>
+      </select>
+    </form>
   </div>
-  <div *ngFor="let user of userData" class="flex border-b flex-row">
-    <div class="flex-1 p-4 text-white">{{ user.name }}</div>
-    <div class="flex-1 p-4 text-white">{{ user.workouts.type || 'N/A' }}</div>
-  <div class="flex-1 p-4 text-white">{{ user.workouts.length }}</div>
-  <div class="flex-1 p-4 font-bold text-white">{{ user.workouts.minutes || 0 }} Min</div>
+
+  <div class="flex border-b w-full flex-row">
+    <div class="flex-1 p-4 w-1/4 font-bold text-white">Name</div>
+    <div class="flex-1 p-4 w-1/4 font-bold text-white">Workout</div>
+    <div class="flex-1 p-4 w-1/4 font-bold text-white">Number Of Workouts</div>
+    <div class="flex-1 p-4 w-1/4 font-bold text-white">
+      Total Workout Minutes
+    </div>
+    <div class="flex-1 p-4 w-1/4 font-bold text-white">
+      <button class="bg-white p-2 text-[#000] border rounded-lg">Action</button>
+    </div>
+  </div>
+  <div
+    *ngFor="let user of filteredUserData"
+    class="flex w-full border-b flex-row"
+  >
+    <div class="flex-1 p-4 w-1/4 text-white">{{ user.name }}</div>
+    <div class="flex-1 p-4 w-1/4 text-white">
+      <span *ngFor="let workout of user.workouts"
+        >{{ workout.type || "N/A" }},
+      </span>
+    </div>
+    <div class="flex-1 p-4 text-white">{{ user.workouts.length }}</div>
+    <div class="flex-1 p-4 font-bold text-white">
+      <span *ngFor="let workout of user.workouts"
+        >{{ workout.minutes || 0 }} Min,
+      </span>
+    </div>
+    <div class="flex-1 p-4 w-1/4 font-bold text-white">
+      <button class="bg-white p-2 text-gray-500 border rounded-lg" (click)='editinputform(user.id)'>Add Workout</button>
+      
+    </div>
   </div>
 </div>
+
+<mat-paginator
+  class="w-2/3 mx-auto"
+  [length]="100"
+  [pageSize]="5"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  aria-label="Select page"
+>
+</mat-paginator>

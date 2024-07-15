@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 // import { UserDataService } from '../user-data.Service';
 import { json } from 'stream/consumers';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-userinput',
@@ -16,43 +17,107 @@ import { json } from 'stream/consumers';
 export class UserinputComponent {
   hctForm: FormGroup;
   nextId: number = 1;
+  HCTobjData! : any[]
 
-  constructor(private _fb: FormBuilder) {
+  // constructor(private _fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: any) {
+  //   // Initialize nextId based on localStorage data
+  //   const HCTFormData = localStorage.getItem('userData');
+  //   const HCTobjData = HCTFormData ? JSON.parse(HCTFormData) : [];   
+  //   this.nextId = Array.isArray(HCTobjData) ? HCTobjData.length + 1 : 1;
 
+  //   // Initialize the form with FormBuilder
+  //   this.hctForm = this._fb.group({
+  //     id: [this.nextId],
+  //     name: ['', Validators.required],
+  //     type: ['', Validators.required],
+  //         minutes: ['', Validators.required],
+      
+  //   });
+  // }
 
-     // Initialize nextId based on localStorage data
+  constructor(private _fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: any) {
+    // Initialize nextId based on localStorage data
     const HCTFormData = localStorage.getItem('userData');
-    const HCTobjData = HCTFormData ? JSON.parse(HCTFormData) : [];   
-    this.nextId = Array.isArray(HCTobjData) ? HCTobjData.length + 1 : 1;
-
+    this.HCTobjData = HCTFormData ? JSON.parse(HCTFormData) : []; // Assign to class property
+  
+    this.nextId = Array.isArray(this.HCTobjData) ? this.HCTobjData.length + 1 : 1;
+  
     // Initialize the form with FormBuilder
     this.hctForm = this._fb.group({
       id: [this.nextId],
       name: ['', Validators.required],
-      workouts: [
-        {
       type: ['', Validators.required],
       minutes: ['', Validators.required],
-        },
-      ],
     });
   }
 
-  onSubmit() {
-    if (this.hctForm.valid) {
-      // Prepare form data to be stored
-      const FormData = {
-        id: this.hctForm.value.id,
-        name: this.hctForm.value.name,
-        workouts: [
-          {
-            type: this.hctForm.value.type,
-            minutes: this.hctForm.value.minutes,
-          },
-        ],
-      };
 
-      console.log("FormData",FormData)
+
+  ngOnInit(): void {
+
+    console.log("onit log", this.data);
+    
+    if (this.data?.id) {
+      const foundData = this.HCTobjData.find(item => item.id === this.data.id);
+      console.log(foundData);
+      if (foundData) {
+        this.hctForm.patchValue({
+          id: foundData.id,
+          name: foundData.name,
+        });
+      }
+    }
+  }
+  
+  
+
+ 
+
+  onSubmit() {
+   
+    if (this.hctForm.valid) {
+      const foundData = this.HCTobjData.find(item => item.id === this.data.id);
+      console.log("foundData", foundData)
+      let formData = {} 
+      if(foundData){
+         formData = {
+          
+          id: foundData.id,
+        name: foundData.name,
+        workouts: [
+          ...foundData.workouts,
+          {
+            type : this.hctForm.value.type,
+            minutes : this.hctForm.value.minutes,
+
+          }
+        ]
+        }
+      }
+      else{
+        // Prepare form data to be stored
+         formData = {
+
+
+          id: this.hctForm.value.id,
+          name: this.hctForm.value.name,
+          workouts: [
+            {
+              type : this.hctForm.value.type,
+              minutes : this.hctForm.value.minutes,
+  
+            }
+          ]
+        };
+
+      }
+      
+      console.log(formData);
+
+
+
+
+      console.log("FormData", formData);
       // Retrieve existing data from localStorage
       const HCTFormData = localStorage.getItem('userData');
       const HCTobjData = HCTFormData ? JSON.parse(HCTFormData) : [];
@@ -61,7 +126,7 @@ export class UserinputComponent {
       console.log(this.hctForm.value);
 
       // Add new form data to existing data
-      const newData = [...HCTobjData, FormData];
+      const newData = [...HCTobjData, formData];
       console.log("newData", newData);
 
       // Store updated data back into localStorage
@@ -77,8 +142,9 @@ export class UserinputComponent {
       this.hctForm.reset({
         id: this.nextId,
         name: '',
-        type: '',
-        minutes: '',
+        type: ['', Validators.required],
+          minutes: ['', Validators.required],
+       
       });
     } else {
       // Error Handled
@@ -86,4 +152,3 @@ export class UserinputComponent {
     }
   }
 }
-

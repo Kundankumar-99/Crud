@@ -1,24 +1,21 @@
+
 import { Component } from '@angular/core';
-import { UserinputComponent } from '../userinput/userinput.component';
 import { MatDialog } from '@angular/material/dialog';
-
-
-
+import { UserinputComponent } from '../userinput/userinput.component';
+import { CommonService } from '../common.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [],
+  imports: [
+      ],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  
-  constructor (private _dialog: MatDialog){}
+  constructor(private dialogService: CommonService) {}
 
-  userinputform(){
-    
-    this._dialog.open(UserinputComponent);
+  userinputform(id?: number) {
+    this.dialogService.openUserInputDialog(id);
   }
-
 }
